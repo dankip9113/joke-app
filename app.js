@@ -23,8 +23,8 @@ yargs.command({
   command: "add",
   describe: "generate new joke",
   handler: () => {
-    my_Joke = GenerateJoke();
-    SaveJoke(my_Joke);
+    my_Joke = generateJoke();
+    saveJoke(my_Joke);
     console.log("joke added");
   },
 });
@@ -39,7 +39,7 @@ yargs.command({
     },
   },
   handler: (args) => {
-    DeleteJoke(args.name);
+    deleteJoke(args.name);
   },
 });
 yargs.command({
@@ -53,21 +53,21 @@ yargs.command({
     },
   },
   handler: (args) => {
-    GetJoke(args.name);
+    getJoke(args.name);
   },
 });
 yargs.command({
   command: "getAll",
   describe: "get all jokes",
   handler: () => {
-    GetAllJokes();
+    getAllJokes();
   },
 });
 
-const GenerateJoke = () => {
+const generateJoke = () => {
   genJoke = joke.getJoke({});
   genName = chance.name({ nationality: "en" });
-  while (!CheckName(genName)) {
+  while (!checkName(genName)) {
     genName = chance.name({ nationality: "en" });
   }
   genAge = chance.age();
@@ -78,8 +78,8 @@ const GenerateJoke = () => {
   };
 };
 
-const CheckName = (name) => {
-  myData = GetData();
+const checkName = (name) => {
+  myData = getData();
   my_Joke = null;
   if (myData.length !== 0) {
     for (let i = 0; i < myData.length; i++) {
@@ -93,9 +93,9 @@ const CheckName = (name) => {
   }
 };
 
-const SaveJoke = (joke) => {
+const saveJoke = (joke) => {
   try {
-    tempData = GetData();
+    tempData = getData();
     tempData.push(joke);
     myData = JSON.stringify(tempData);
     fs.writeFileSync(FILE_NAME, myData);
@@ -103,8 +103,8 @@ const SaveJoke = (joke) => {
     fs.writeFileSync(FILE_NAME, [JSON.stringify(joke)]);
   }
 };
-const GetAllJokes = () => {
-  myData = GetData();
+const getAllJokes = () => {
+  myData = getData();
   if (myData.length !== 0) {
     for (let i = 0; i < myData.length; i++) {
       console.log(
@@ -116,8 +116,8 @@ const GetAllJokes = () => {
   }
 };
 
-const GetJoke = (name) => {
-  myData = GetData();
+const getJoke = (name) => {
+  myData = getData();
   my_Joke = null;
   if (myData.length > 1) {
     my_Joke = myData.find((joke) => {
@@ -134,8 +134,8 @@ const GetJoke = (name) => {
     console.log("We have no joke here:(");
   }
 };
-const DeleteJoke = (name) => {
-  myData = GetData();
+const deleteJoke = (name) => {
+  myData = getData();
   my_Joke = null;
   if (myData.length > 1) {
     my_Joke = myData.find((joke) => {
@@ -145,7 +145,7 @@ const DeleteJoke = (name) => {
       tempData = myData.filter((joke) => {
         return joke.name !== name;
       });
-      SaveData(tempData);
+      saveData(tempData);
     } else {
       console.log("Your joke didnt exist");
     }
@@ -153,10 +153,10 @@ const DeleteJoke = (name) => {
     console.log("We have no joke here:(");
   }
 };
-const SaveData = (data) => {
+const saveData = (data) => {
   fs.writeFileSync(FILE_NAME, JSON.stringify(data));
 };
-const GetData = () => {
+const getData = () => {
   try {
     bufferData = fs.readFileSync(FILE_NAME);
     jsonData = bufferData.toString();
